@@ -55,8 +55,18 @@ passport.use(new LinkedInStrategy({
     });
 }));
 
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
 app.use('/', routes);
 app.use('/users', users);
+
+app.get('/logout', (req, res) => {
+  req.session = null;
+  res.redirect('/');
+});
 
 app.get('/auth/linkedin', passport.authenticate('linkedin'), (req, res) => {
 
